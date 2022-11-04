@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Script to get JSON file and display its content -->
+    <script type="text/javascript" language="javascript">
+
+function DeleteUser(id) {
+  
+  console.log("Delete!!!");
+    $.ajax({
+        url: 'http://localhost:5101/api/user?id='+id,
+        method: 'DELETE',
+        contentType: 'application/json',
+        dataType: "json",
+        success: function(result) {
+            // handle success
+          
+            location.reload(true);
+        },
+        error: function(request,msg,error) {
+            // handle failure
+        }
+        });
+}
+function AddUser() {
+  
+  console.log("Add!!!");
+    $.ajax({
+        url: 'http://localhost:5101/api/user',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            DisplayName:$("#DisplayName").val(),
+    Email: $("#Email").val(),
+    Phone:$("#Phone").val(),
+    DateOfBirth:$("#DateOfBirth").val(),
+    Address:$("#Address").val(),
+        }),
+        dataType: 'json'
+    });
+  
+
+}
+function EditUserConfirm(id) {
+  
+  console.log("Edit!!!");
+    $.ajax({
+        url: 'http://localhost:5101/api/user?id='+id,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            DisplayName:$("#DisplayName").val(),
+    Email: $("#Email").val(),
+    Phone:$("#Phone").val(),
+    DateOfBirth:$("#DateOfBirth").val(),
+    Address:$("#Address").val(),
+        }),
+        dataType: "json",
+        success: function(result) {
+            // handle success
+          
+            location.reload(true);
+        },
+        error: function(request,msg,error) {
+            // handle failure
+        }
+        });
+}
+function EditUser(d) {
+  
+  $("#show").css("display", "block");
+  $.getJSON("http://localhost:5101/api/user", function (emp) {
+    $("#ID").val(emp[d].id);
+    $("#DisplayName").val(emp[d].displayName);
+    $("#Email").val(emp[d].email);
+    $("#Phone").val(emp[d].phone);
+    $("#DateOfBirth").val(emp[d].dateOfBirth);
+    $("#Address").val(emp[d].address);
+
+          });
+  
+
+}
+      $(document).ready(function () {
+        
+        
+          $.getJSON("http://localhost:5101/api/user", function (emp) {
+            for (var i = 0; i < emp.length; i++) {
+              var td = '<tr><td>' + emp[i].id + '</td>'
+                + '<td>' + emp[i].displayName + '</td>'
+                + '<td>' + emp[i].email + '</td> '
+                + '<td>' + emp[i].phone + '</td> '
+                + '<td>' + emp[i].dateOfBirth + '</td> '
+                + '<td>' + emp[i].address + '</td> '
+                + '<td><button style="margin-right:20px" onclick="DeleteUser(\'' + emp[i].id + '\')">Delete</button><button onclick="EditUser(\'' + i+ '\')">Edit</button></td></tr>'
+                ;
+                $("tbody").append("<p>" + td + "</p>");
+              
+            }
+          });
+        
+        $("#add").click(function (event) {
+          $("#show").css("display", "block");
+
+          });
+
+          $("#confirmBtn").click(function (event) {
+          if($('#ID').val()=="")
+          {
+            AddUser();
+            $("#show").css("display", "none");
+            location.reload();
+          }
+          else{
+            EditUserConfirm($('#ID').val());
+            $("#show").css("display", "none");
+          }
+          
+        });
+        $("#cancel").click(function (event) {
+          $("#ID").val("");
+    $("#DisplayName").val("");
+    $("#Email").val("");
+    $("#Phone").val("");
+    $("#DateOfBirth").val("");
+    $("#Address").val("");
+          $("#show").css("display", "none");
+        });
+
+
+
+
+        });
+        
+        
+
+
+
+      
+     
+    </script>
+
+    <style>
+ table, th, td {
+  border: 1px solid white;
+  border-collapse: collapse;
+}
+th, td {
+  height: 50px;
+  background-color: #04AA6D;
+}
+button{
+  width: 100px;
+  height: 40px;
+}
+ul {
+  position: fixed;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  left: 0;
+   top:  0;
+   width: 100%;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+footer {
+   position: fixed;
+   height: 50px;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #111;
+   color: white;
+   text-align: center;
+}
+    </style>
+  </head>
+
+  <body>
+    <ul>
+      <li><a class="active" href="user.html">User</a></li>
+      <li><a href="article.html">Article</a></li>
+      <li><a href="comment.htm">Comment</a></li>
+    </ul>
+    <h1 style="text-align: center;padding-top: 50px;">List User</h1>
+    <div style="float: right;">
+      <button id="add" style="margin-bottom: 20px;">Add User</button>
+    </div>
+    
+      <div>
+        
+     
+  <div > 
+    
+
+  </div>
+    <dialog id="show" style="display: none;">
+      <form method="dialog">
+        <p>
+          <label for="fname">ID:</label>
+          <input type="text" id="ID" name="fname" disabled style="float: right;margin-left: 10px;"><br><br>
+            <label for="fname">DisplayName:</label>
+            <input type="text" id="DisplayName" name="fname" style="float: right;margin-left: 10px; "><br><br>
+            <label for="lname">Email:</label>
+            <input type="text" id="Email" name="lname" style="float: right;margin-left: 10px;"><br><br>
+            <label for="fname">Phone:</label>
+            <input type="text" id="Phone" name="fname" style="float: right;margin-left: 10px;"><br><br>
+            <label for="lname">DateOfBirth:</label>
+            <input type="text" id="DateOfBirth" name="lname" style="float: right;margin-left: 10px;"><br><br>
+            <label for="fname">Address:</label>
+            <input type="text" id="Address" name="fname" style="float: right;margin-left: 10px;"><br><br>
+          </form>
+        </p>
+        <div >
+          <button id="cancel">Cancel</button>
+          <button id="confirmBtn" style="float: right;">Confirm</button>
+        </div>
+      </form>
+    </dialog>
+    <table id="UserList" class="display" style="width: 100%;margin-bottom: 50px;">
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Display Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Date OF Birth</th>
+              <th>Address</th>
+              <th style="width: 220px;">Button</th>
+          </tr>
+      </thead>
+      <tbody></tbody>
+  </table>
+      </div>
+    
+<div style="height: 50px;">
+
+</div>
+
+      <footer>
+        <p>Author: Nhóm kín nhiều người biết<br>
+      </footer>
+  </body>
+</html>
+
+
+
+  
+
